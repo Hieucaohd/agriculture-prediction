@@ -1,0 +1,7 @@
+ipython --pylab
+
+
+import spectral.io.envi as envi
+img = envi.open("hyper_20220913_3cm.hdr", "hyper_20220913_3cm.img")
+from spectral import open_image, imshow
+view = imshow(img)

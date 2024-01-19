@@ -1,0 +1,8 @@
+/venv
+/img_save
+/__pycache__
+/RF_save
+*.enp
+*.hdr
+*.img
+*.xlsx
