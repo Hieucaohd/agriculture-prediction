@@ -162,6 +162,15 @@ def get_average_bands(row_num, col_num, scope):
     return np.average(band_in_scope, axis=0) # Lấy giá trị max của từng cột (band)
 
 # %%
+# Lấy giá trị max của từng band trong các ô xung quanh
+def get_min_bands(row_num, col_num, scope):
+    number_points = 2 * scope + 1
+    band_in_scope = np.zeros((number_points ** 2, 122))
+    for i, (row_num, col_num) in enumerate(pixel_in_scope(row_num, col_num, scope)):
+        band_in_scope[i] = img[row_num, col_num, :].reshape(122)
+    return np.min(band_in_scope, axis=0) # Lấy giá trị max của từng cột (band)
+
+# %%
 def generate_sample(df: pd.DataFrame, bands_ix: list[int], type_of_output: Literal["N", "P", "K"] = None, type_of_field: Literal["T", "J", "BC"] = None, func_to_cal_band = get_average_bands):
     if type_of_output == "N":
         output_column = "N conc. (mg/kg).1"
