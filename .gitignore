@@ -1,8 +1,10 @@
 /venv
 /img_save
 /__pycache__
+/img_data
 /RF_save
 *.enp
 *.hdr
 *.img
 *.xlsx
+*.tgz

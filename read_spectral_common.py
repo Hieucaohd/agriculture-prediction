@@ -4,8 +4,11 @@
 import spectral.io.envi as envi		# hàm để đọc file .hdr và file .img
 import numpy as np 					# để thao tác với ma trận
 from spectral import open_image, imshow 	# để hiển thị hình ảnh
-import pandas as pd                         # để đọc file excel
-from typing import LiteralString
+import pandas as pd # để đọc file excel
+try:
+    from typing import LiteralString
+except:
+    from typing_extensions import LiteralString
 from sklearn.metrics import mean_squared_error #để tính Mean squared error
 from sklearn import tree
 import os
