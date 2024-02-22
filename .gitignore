@@ -8,9 +8,13 @@
 *.img
 *.xlsx
 *.tgz
-
 *.db
 *.pid
+*.npz
+*.zip
+*.png
+
+src/checkpoint/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -77,9 +77,69 @@ def get_image_data_from_redis(img, start_row, end_row, col, num_band):
     img_data_list = eval(img_data_str)
     img_data_np = np.array(img_data_list)
     return img_data_np, "redis"
-        
 
-def calulate_N(
+
+def read_col_data_from_file(file_path):
+    with np.load(file_path) as file:
+        return file["arr_0"]
+
+
+def calculate_N_using_col_data(
+    run_id: int, 
+    col: int,
+    ):
+    start_time = time.time()
+    
+    file_path = f"./data/img_col_data/img_{col}.npz"
+    matrix = read_col_data_from_file(file_path)
+    
+    end_get_img_data = time.time()
+    logging.info(f"Finished get img data in:  {end_get_img_data - start_time:.2f} seconds. Col = {col}, file = {file_path}.")
+    
+    nitos = clf_RF_1.predict(matrix).tolist()
+    
+    result = pd.DataFrame({
+        "col": col,
+        "len_result": [len(nitos)],
+        "run_id": [run_id],
+        "nitos": [str(nitos)],
+    })
+    
+    end_calculate_time = time.time()
+    logging.info(f"Finished calculate in:     {end_calculate_time - end_get_img_data:.2f} seconds.")
+    
+    partition = col % NUM_PARTITION
+    sqlite3_conn = SQLITE3_CONN_POOL[partition]
+    table_name = f"nito_{run_id}"
+    result.to_sql(
+        table_name,
+        sqlite3_conn,
+        if_exists="append",
+        index=False
+    )
+    
+    end_insert_to_sql_time = time.time()
+    logging.info(f"Finished insert to sql in: {end_insert_to_sql_time - end_calculate_time:.2f} seconds. Table name = {table_name}, partition = {partition}.")
+    logging.info(f"TOTAL:                     {end_insert_to_sql_time - start_time:.2f} seconds.")
+
+
+@app.task(bind=True)
+def calculate_N_using_col_data_task(
+    self: Task,
+    run_id: int,
+    col: int,
+    ):
+    try:
+        calculate_N_using_col_data(
+            run_id,
+            col
+        )
+    except Exception as e:
+        logging.info(f"Error: {str(e)}")
+        raise self.retry(countdown=10, exc=e, max_retries=3, args=(run_id, col))
+
+
+def calculate_N(
     run_id: int,
     img: List,
     col: int,
@@ -135,7 +195,7 @@ def calculate_N_task(
     
     err = None
     try:
-        calulate_N(
+        calculate_N(
             run_id,
             IMG,
             col,
@@ -194,7 +254,7 @@ def send_matrix_to_queue_task(
         )
     except Exception as e:
         logging.info(f"Error: {str(e)}")
-        raise self.retry(countdown=10, exc=e, max_retries=3)
+        raise self.retry(countdown=10, exc=e, max_retries=3, args=(run_id, col, chunk))
     
 
 def push_to_redis(
@@ -248,4 +308,4 @@ def push_img_data_to_redis_task(
         )
     except Exception as e:
         logging.info(f"Error: {str(e)}")
-        raise self.retry(countdown=10, exc=e, max_retries=3)
+        raise self.retry(countdown=10, exc=e, max_retries=3, args=(col, start_row, end_row))
