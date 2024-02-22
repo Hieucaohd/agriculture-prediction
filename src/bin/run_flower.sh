@@ -1,4 +1,6 @@
 #!/bin/bash
 
-source /home/ubuntu/code/agriculture-prediction/venv/bin/activate
+cd "$(dirname $0)/../"
+
+source ../venv/bin/activate
 celery -A proj flower

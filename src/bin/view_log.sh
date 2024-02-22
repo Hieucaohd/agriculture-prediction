@@ -1,3 +1,5 @@
 #!/bin/bash
 
-tail -f /home/ubuntu/code/agriculture-prediction/src/log/celery/*.log
+cd "$(dirname $0)/../"
+
+tail -f log/celery/*.log
