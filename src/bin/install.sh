@@ -10,6 +10,8 @@ mkdir -p src/checkpoint
 mkdir -p src/log/celery
 mkdir -p src/run/celery
 mkdir -p src/proj/db/db_new
+mkdir -p src/data/img_col_data
+mkdir -p src/data/saved_result
 
 source venv/bin/activate
 
