@@ -25,6 +25,15 @@ For windown:
 ```
 
 
+## How to calculate image
+
+1) Read spectral image then save each column data to file: <https://github.com/Hieucaohd/agriculture-prediction/blob/main/src/convert_img_to_np.ipynb>
+
+2) Load AI model then predict Nito, Photpho, Kali for each column by that model: <https://github.com/Hieucaohd/agriculture-prediction/blob/main/src/bulk_calculate.ipynb>
+
+3) Draw image: <https://github.com/Hieucaohd/agriculture-prediction/blob/main/src/draw_img.ipynb>
+
+
 ## Example Programs
 
 Spark also comes with several sample programs in the `examples` directory.
