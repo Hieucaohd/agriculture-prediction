@@ -10,6 +10,7 @@ import spectral.io.envi as envi
 import random
 import time
 import redis
+import os
 
 
 logging.basicConfig(level=logging.INFO)
@@ -19,35 +20,39 @@ def load_sklearn_model_to_file(file_path):
     with open(file_path, "rb") as file:
         return pickle.load(file)
     
+
+def get_full_path(path):
+    script_dir = os.path.dirname(os.path.realpath(__file__))
+    return os.path.abspath(os.path.join(script_dir, path))
     
 def read_image_spectral():
     return envi.open(
-        "../data/spectral_image/hyper_20220913_3cm.hdr", 
-        "../data/spectral_image/hyper_20220913_3cm.img"
+        get_full_path("../../data/spectral_image/hyper_20220913_3cm.hdr"), 
+        get_full_path("../../data/spectral_image/hyper_20220913_3cm.img")
     )
     
 def read_image_spectral_1():
     return envi.open(
-        "../data/spectral_image_1/hyper_20220913_3cm.hdr", 
-        "../data/spectral_image_1/hyper_20220913_3cm.img"
+        get_full_path("../../data/spectral_image_1/hyper_20220913_3cm.hdr"), 
+        get_full_path("../../data/spectral_image_1/hyper_20220913_3cm.img")
     )
     
 def read_image_spectral_2():
     return envi.open(
-        "../data/spectral_image_2/hyper_20220913_3cm.hdr", 
-        "../data/spectral_image_2/hyper_20220913_3cm.img"
+        get_full_path("../../data/spectral_image_2/hyper_20220913_3cm.hdr"), 
+        get_full_path("../../data/spectral_image_2/hyper_20220913_3cm.img")
     )
 
 def create_sqlite3_conn_pool(num_partition):
     pool = {}
     for partition in range(num_partition):
-        pool[partition] = sqlite3.connect(f"./proj/db/agriculture_{partition}.db")
+        pool[partition] = sqlite3.connect(get_full_path(f"./db/agriculture_{partition}.db"))
     return pool
     
     
 NUM_PARTITION = 5
 SQLITE3_CONN_POOL = create_sqlite3_conn_pool(NUM_PARTITION)
-clf_RF_1 = load_sklearn_model_to_file("../RF_save/clf_RF_1.pkl")
+clf_RF_1 = load_sklearn_model_to_file(get_full_path("../../RF_save/clf_RF_1.pkl"))
 IMG = read_image_spectral()
 REDIS_CONN = redis.Redis("localhost", 6379, db=6)
 
@@ -90,7 +95,7 @@ def calculate_N_using_col_data(
     ):
     start_time = time.time()
     
-    file_path = f"./data/img_col_data/img_{col}.npz"
+    file_path = get_full_path(f"../data/img_col_data/img_{col}.npz")
     matrix = read_col_data_from_file(file_path)
     
     end_get_img_data = time.time()

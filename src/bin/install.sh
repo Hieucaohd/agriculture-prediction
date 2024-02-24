@@ -12,6 +12,7 @@ mkdir -p src/run/celery
 mkdir -p src/proj/db/db_new
 mkdir -p src/data/img_col_data
 mkdir -p src/data/saved_result
+mkdir -p src/data/img_result_saved
 
 source venv/bin/activate
 
