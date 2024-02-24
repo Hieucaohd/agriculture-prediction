@@ -1,4 +1,4 @@
-# %%
+
 # import các hàm cần thiết
 
 import spectral.io.envi as envi		# hàm để đọc file .hdr và file .img
@@ -26,8 +26,6 @@ def get_full_path(path):
     return os.path.abspath(os.path.join(script_dir, path))
 
 
-
-
 class WrapSKlearnModelWithBand():
     def __init__(self, sklearn_model, bands_ix) -> None:
         self.sklearn_model = sklearn_model
@@ -38,17 +36,8 @@ class WrapSKlearnModelWithBand():
     
     def predict(self, X_target):
         return self.sklearn_model.predict(X_target)
-    
-
-# %%
-# BAND_START_IX = 4
-# BAND_END_IX = 101
-# BAND_START_NAME = f"band_{BAND_START_IX}"
-# BAND_END_NAME = f"band_{BAND_END_IX}"
-# TOTAL_BAND = BAND_END_IX - BAND_START_IX + 1
 
 
-# %%
 # mở file .hdr và file .img
 img = envi.open(
     get_full_path("../../data/spectral_image/hyper_20220913_3cm.hdr"), 
@@ -56,12 +45,10 @@ img = envi.open(
 )
 
 
-# %%
 def get_bands(row_num, col_num):
     return img[row_num, col_num]
 
 
-# %%
 # hàm này trả về các pixel nằm trong hình vuông có tọa độ (row_num, col_num) là tâm
 # và độ dài cạnh là (2 * scopes + 1)
 def pixel_in_scope(row_num, col_num, scopes):
@@ -81,7 +68,6 @@ def pixel_in_scope(row_num, col_num, scopes):
     return pixel_in_scope
 
 
-# %%
 # thông tin của map, tạm thời được đưa vào bằng tay
 # "x1_pixel": tọa độ pixel x của điểm 1
 # "y1_pixel": tọa độ pixel y của điểm 1
@@ -99,7 +85,6 @@ map_infor = {
 }
 
 
-# %%
 # công thức lấy tọa độ trái đất khi biết tạo độ trái đất của điểm có tạo độ pixel (1, 1)
 # (East - 530499.467 ) / 0.03 = số cột
 # (2355871.685 - north) / 0.03 = cố hàng
@@ -107,7 +92,6 @@ map_infor = {
 # East = 530499.467 + so cột * 0.03
 # North = 2355871.685 - so hàng * 0.03 
 
-# %%
 # từ tọa độ pixel, lấy tọa độ trái đất
 def get_axes(row_num, col_num):
     east = map_infor["east_1"] + col_num * map_infor["col_resolution"]  
@@ -115,7 +99,6 @@ def get_axes(row_num, col_num):
     return (north, east)
     
 
-# %%
 # từ tọa độ trái đất, lấy tọa độ pixel
 def get_pixel(north, east):
     col_num = (east - map_infor["east_1"]) / map_infor["col_resolution"]
@@ -125,34 +108,31 @@ def get_pixel(north, east):
     row_num = int(round(row_num, 0))
     return (row_num, col_num)
 
-# %%
+
 # đọc file excel chứa data của NPK và tọa độ Trái Đất
 data_df = pd.read_excel(
     get_full_path("../../data/spectral_image/DATA_Mua2_PhuTho_2022_3.xlsx")
 )
 
 
-# %%
 # Lấy cột dữ liệu đo được của ngày 13/9/2022
 data_df_13_09_2022 = data_df.loc[1:, "Unnamed: 14":"Chlorophyll-a.1"]
 
-# %%
+
 data_df_13_09_2022.rename(columns={
     "Unnamed: 14": "type_of_field"
 }, inplace=True)
 
-# %%
+
 # Bỏ đi những dòng bị thiếu tên điểm 
 data_df_13_09_2022 = data_df_13_09_2022[~pd.isna(data_df_13_09_2022["type_of_field"])]
 
 
-# %%
 # Tạo thêm cột 2 tọa độ pixel
 data_df_13_09_2022["row_num"] = [None] * len(data_df_13_09_2022)
 data_df_13_09_2022["col_num"] = [None] * len(data_df_13_09_2022)
 
 
-# %%
 # Định nghĩa hàm tính tọa độ pixel của điểm thực đo ngoài thực nghiệm
 def fill_row_num_and_col_num(index, row, df: pd.DataFrame):
     east = row["East.1"]
@@ -161,13 +141,12 @@ def fill_row_num_and_col_num(index, row, df: pd.DataFrame):
     df.at[index, "row_num"] = row_num
     df.at[index, "col_num"] = col_num
 
-# %%
+
 # Lặp hàm tính tọa độ pixel trên cho từng dòng
 for index, row in data_df_13_09_2022.iterrows():
     fill_row_num_and_col_num(index, row, data_df_13_09_2022)
 
 
-# %%
 # Lấy giá trị max của từng band trong các ô xung quanh
 def get_max_bands(row_num, col_num, scope):
     number_points = 2 * scope + 1
@@ -176,7 +155,7 @@ def get_max_bands(row_num, col_num, scope):
         band_in_scope[i] = img[row_num, col_num, :].reshape(122)
     return np.max(band_in_scope, axis=0) # Lấy giá trị max của từng cột (band)
 
-# %%
+
 # Lấy giá trị max của từng band trong các ô xung quanh
 def get_average_bands(row_num, col_num, scope):
     number_points = 2 * scope + 1
@@ -185,7 +164,7 @@ def get_average_bands(row_num, col_num, scope):
         band_in_scope[i] = img[row_num, col_num, :].reshape(122)
     return np.average(band_in_scope, axis=0) # Lấy giá trị max của từng cột (band)
 
-# %%
+
 # Lấy giá trị max của từng band trong các ô xung quanh
 def get_min_bands(row_num, col_num, scope):
     number_points = 2 * scope + 1
@@ -194,7 +173,7 @@ def get_min_bands(row_num, col_num, scope):
         band_in_scope[i] = img[row_num, col_num, :].reshape(122)
     return np.min(band_in_scope, axis=0) # Lấy giá trị max của từng cột (band)
 
-# %%
+
 def generate_sample(df: pd.DataFrame, bands_ix: list[int], type_of_output: Literal["N", "P", "K"] = None, type_of_field: Literal["T", "J", "BC"] = None, func_to_cal_band = get_average_bands):
     if type_of_output == "N":
         output_column = "N conc. (mg/kg).1"
@@ -233,7 +212,6 @@ def generate_sample(df: pd.DataFrame, bands_ix: list[int], type_of_output: Liter
     return sample
     
 
-# %%
 def create_X_train_Y_train(df: pd.DataFrame, bands_ix: list[int]):
     band_start_name = "band_" + str(bands_ix[0])
     band_end_name = "band_" + str(bands_ix[-1])
@@ -261,7 +239,7 @@ def create_X_train_Y_train(df: pd.DataFrame, bands_ix: list[int]):
 
     return X_train, Y_train
 
-# %%
+
 class NeutralNetwork(nn.Module):
     def __init__(self, number_bands: int, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
@@ -289,7 +267,7 @@ class NeutralNetwork(nn.Module):
         N_value = self.linear_relu_stack(x)
         return N_value
 
-# %%
+
 def train_model(model, loss_fn, optimizer, X_train, Y_train, X_val, Y_val, n_epochs, min_loss=0.5):
     for epoch in range(n_epochs):
         model.train()
@@ -312,6 +290,7 @@ def train_model(model, loss_fn, optimizer, X_train, Y_train, X_val, Y_val, n_epo
                 if loss < min_loss:
                     return
 
+
 def calculate_matual_info_for_all(df: pd.DataFrame, type_of_output: Literal["N", "P", "K"] = None, type_of_field: Literal["T", "J", "BC"] = None, func_to_cal_band = get_average_bands):
     bands_ix = list(range(0, 122))
     sample = generate_sample(df, bands_ix, type_of_output, type_of_field, func_to_cal_band)
@@ -331,8 +310,6 @@ def get_bands_ix_from_mutual_info(df: pd.DataFrame, min_mutual_info: float, type
     return sorted(bands_ix)
 
 
-
-# %%
 def predict_using_neutral_network(X_train, Y_train, X_target, Y_target, name_file_output, super_param={"lr": 0.0001, "weight_decay": 1e-5, "n_epochs": 40000, "stop_value": 0.5}, re_run="N"):
     loss_fn = nn.MSELoss()
     if not os.path.exists(name_file_output) or re_run == "Y":
@@ -352,7 +329,7 @@ def predict_using_neutral_network(X_train, Y_train, X_target, Y_target, name_fil
         loss = loss_fn(Y_target, Y_target_pred)
         return np.sqrt(loss), Y_target_pred
 
-# %%
+
 def predict_using_random_forest(X_train, Y_train, X_target, Y_target, bands_ix, super_param={}):
     clf = RandomForestRegressor()
     RF_band = WrapSKlearnModelWithBand(clf, bands_ix)
@@ -365,8 +342,6 @@ def predict_using_random_forest(X_train, Y_train, X_target, Y_target, bands_ix, 
     return loss, Y_pred, RF_band
 
 
-
-# %%
 def predict_using_decision_tree(X_train, Y_train, X_target, Y_target, bands_ix, super_param={}):
     clf = tree.DecisionTreeRegressor()
     DT_band = WrapSKlearnModelWithBand(clf, bands_ix)
@@ -377,47 +352,4 @@ def predict_using_decision_tree(X_train, Y_train, X_target, Y_target, bands_ix, 
     Y_pred = DT_band.predict(X_target)
     loss = np.sqrt(mean_squared_error(Y_target, Y_pred))
     return loss, Y_pred, DT_band
-
-
-# %%
-#Dự đoán Nito
-
-# %%
-# target_value = "N"
-# train_field = "T"
-# sample = generate_sample(data_df_13_09_2022, target_value, train_field)
-# X_train, Y_train = create_X_train_Y_train(sample)
-# sample_target = generate_sample(data_df_13_09_2022, target_value, "BC")
-# X_target, Y_target = create_X_train_Y_train(sample_target)
-# super_param={"lr": 0.001, "weight_decay": 1e-5, "n_epochs": 40000, "stop_value": 0.5}
-# re_run = "N"
-# loss_NN, pred_NN = predict_using_neutral_network(X_train, Y_train, X_target, Y_target, f"{'_'.join(list(train_field))}_model_predict_{target_value}_2.pt", super_param, re_run)
-# print(f"{loss_NN=}")
-# print(f"{pred_NN=}")
-# loss_RF, pred_RF = predict_using_random_forest(X_train, Y_train, X_target, Y_target, super_param)
-# print(f"{loss_RF=}")
-# print(f"{pred_RF=}")
-# loss_DT, pred_DT = predict_using_decision_tree(X_train, Y_train, X_target, Y_target, super_param)
-# print(f"{loss_DT=}")
-# print(f"{pred_DT=}")
-
-
-# # %%
-# target_value = "N"
-# train_field = ["T", "J"]
-# sample = generate_sample(data_df_13_09_2022, target_value, train_field)
-# X_train, Y_train = create_X_train_Y_train(sample)
-# sample_target = generate_sample(data_df_13_09_2022, target_value, "BC")
-# X_target, Y_target = create_X_train_Y_train(sample_target)
-# super_param={"lr": 0.0001, "weight_decay": 1e-5, "n_epochs": 40000, "stop_value": 0.5}
-# re_run = "N"
-# loss_NN, pred_NN = predict_using_neutral_network(X_train, Y_train, X_target, Y_target, f"{'_'.join(list(train_field))}_model_predict_{target_value}_2.pt", super_param, re_run)
-# print(f"{loss_NN=}")
-# print(f"{pred_NN=}")
-# loss_RF, pred_RF = predict_using_random_forest(X_train, Y_train, X_target, Y_target, super_param)
-# print(f"{loss_RF=}")
-# print(f"{pred_RF=}")
-# loss_DT, pred_DT = predict_using_decision_tree(X_train, Y_train, X_target, Y_target, super_param)
-# print(f"{loss_DT=}")
-# print(f"{pred_DT=}")
 
