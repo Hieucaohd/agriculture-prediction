@@ -25,6 +25,7 @@ def get_full_path(path):
     script_dir = os.path.dirname(os.path.realpath(__file__))
     return os.path.abspath(os.path.join(script_dir, path))
     
+    
 def read_image_spectral():
     return envi.open(
         get_full_path("../../data/spectral_image/hyper_20220913_3cm.hdr"), 
@@ -52,7 +53,7 @@ def create_sqlite3_conn_pool(num_partition):
     
 NUM_PARTITION = 5
 SQLITE3_CONN_POOL = create_sqlite3_conn_pool(NUM_PARTITION)
-clf_RF_1 = load_sklearn_model_to_file(get_full_path("../../RF_save/clf_RF_1.pkl"))
+clf_RF_1 = load_sklearn_model_to_file(get_full_path("../../model_saved/RF_save/clf_RF_1.pkl"))
 IMG = read_image_spectral()
 REDIS_CONN = redis.Redis("localhost", 6379, db=6)
 
