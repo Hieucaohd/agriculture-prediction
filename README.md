@@ -25,50 +25,23 @@ For windown:
 ```
 
 
+## How to train AI model
+
+We use PyTorch and Scikit-learn library to train the model inference: 
+1) PyTorch: <https://pytorch.org/>
+
+2) Scikit-learn: <https://scikit-learn.org/stable/>
+
+Here is module that we build to train our AI: [train AI model.](https://github.com/Hieucaohd/agriculture-prediction/blob/main/AI/common/read_spectral_common.py)
+
+
+
 ## How to calculate image
 
-1) Read spectral image then save each column data to file: <https://github.com/Hieucaohd/agriculture-prediction/blob/main/src/convert_img_to_np.ipynb>
+1) Read spectral image then save each column data to file: [convert spectral image to numpy array.](https://github.com/Hieucaohd/agriculture-prediction/blob/main/src/convert_img_to_np.ipynb)
 
-2) Load AI model then predict Nito, Photpho, Kali for each column by that model: <https://github.com/Hieucaohd/agriculture-prediction/blob/main/src/bulk_calculate.ipynb>
+2) Load AI model then predict Nito, Photpho, Kali for each column by that model: [load AI model to code.](https://github.com/Hieucaohd/agriculture-prediction/blob/main/src/bulk_calculate.ipynb)
 
-3) Draw image: <https://github.com/Hieucaohd/agriculture-prediction/blob/main/src/draw_img.ipynb>
+3) Draw image: [draw image.](https://github.com/Hieucaohd/agriculture-prediction/blob/main/src/draw_img.ipynb)
 
-
-## Example Programs
-
-Spark also comes with several sample programs in the `examples` directory.
-To run one of them, use `./bin/run-example <class> [params]`. For example:
-
-```bash
-./bin/run-example SparkPi
-```
-
-will run the Pi example locally.
-
-You can set the MASTER environment variable when running examples to submit
-examples to a cluster. This can be spark:// URL,
-"yarn" to run on YARN, and "local" to run
-locally with one thread, or "local[N]" to run locally with N threads. You
-can also use an abbreviated class name if the class is in the `examples`
-package. For instance:
-
-```bash
-MASTER=spark://host:7077 ./bin/run-example SparkPi
-```
-
-Many of the example programs print usage help if no params are given.
-
-## Running Tests
-
-Testing first requires [building Spark](#building-spark). Once Spark is built, tests
-can be run using:
-
-```bash
-./dev/run-tests
-```
-
-Please see the guidance on how to
-[run tests for a module, or individual tests](https://spark.apache.org/developer-tools.html#individual-tests).
-
-There is also a Kubernetes integration test, see resource-managers/kubernetes/integration-tests/README.md
 
