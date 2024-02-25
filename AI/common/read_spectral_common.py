@@ -291,7 +291,7 @@ def train_model(model, loss_fn, optimizer, X_train, Y_train, X_val, Y_val, n_epo
                     return
 
 
-def calculate_matual_info_for_all(df: pd.DataFrame, type_of_output: Literal["N", "P", "K"] = None, type_of_field: Literal["T", "J", "BC"] = None, func_to_cal_band = get_average_bands):
+def calculate_mutual_info_for_all(df: pd.DataFrame, type_of_output: Literal["N", "P", "K"] = None, type_of_field: Literal["T", "J", "BC"] = None, func_to_cal_band = get_average_bands):
     bands_ix = list(range(0, 122))
     sample = generate_sample(df, bands_ix, type_of_output, type_of_field, func_to_cal_band)
     X_train, Y_train = create_X_train_Y_train(sample, bands_ix)
@@ -304,7 +304,7 @@ def calculate_matual_info_for_all(df: pd.DataFrame, type_of_output: Literal["N",
 
 
 def get_bands_ix_from_mutual_info(df: pd.DataFrame, min_mutual_info: float, type_of_output: Literal["N", "P", "K"] = None, type_of_field: Literal["T", "J", "BC"] = None, func_to_cal_band = get_average_bands):
-    band_ix_and_mutual = calculate_matual_info_for_all(df, type_of_output, type_of_field, func_to_cal_band)
+    band_ix_and_mutual = calculate_mutual_info_for_all(df, type_of_output, type_of_field, func_to_cal_band)
     band_ix_and_mutual_after = filter(lambda data:  data[1] > min_mutual_info, band_ix_and_mutual)
     bands_ix = [data[0] for data in band_ix_and_mutual_after]
     return sorted(bands_ix)
