@@ -23,7 +23,7 @@ Then in Linux run:
 Or in windown run:
 
 ```bash
-> ./src/bin/window_install.ps1
+> .\src\bin\window_install.ps1
 ```
 
 After install, your folder structure will be like that:
