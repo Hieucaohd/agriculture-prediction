@@ -7,17 +7,56 @@ What is data structured of spectral image? <https://www.spectralpython.net/>
 
 ## Install package dependencies
 
-To install the package dependencies and create folder that source code used, in linux run:
+To install the package dependencies and create folder that source code used, in folder agriculture-prediction, run command to create python virtual environment:
 
 ```bash
-sudo chmod +x ./src/bin/*.sh
-./src/bin/install.sh
+> python3 -m venv venv
 ```
 
-For windown:
+Then in Linux run:
 
 ```bash
-./src/bin/window_install.ps1
+> sudo chmod +x ./src/bin/*.sh
+> ./src/bin/install.sh
+```
+
+Or in windown run:
+
+```bash
+> ./src/bin/window_install.ps1
+```
+
+After install, your folder structure will be like that:
+
+```bash
++---AI
+ª   +---common
++---data
+ª   +---spectral_image
+ª   +---spectral_image_1
+ª   +---spectral_image_2
++---guide
++---model_saved
+ª   +---DT_save
+ª   +---NN_save
+ª   +---RF_save
++---multiple_processing
++---RF_save
++---venv
++---src
+    +---bin
+    +---checkpoint
+    +---data
+    ª   +---img_col_data
+    ª   +---img_result_saved
+    ª   +---saved_result
+    +---log
+    ª   +---celery
+    +---proj
+    ª   +---db
+    ª       +---db_new
+    +---run
+        +---celery
 ```
 
 Then download spectral images in these links and save to folder ./data/spectral_image
