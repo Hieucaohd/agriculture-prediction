@@ -32,7 +32,15 @@ Then download spectral images in these links and save to folder ./data/spectral_
 ## How to read spectral image
 1) Open terminal in Linux or power-shell in Windown.
 2) Make sure that you in environment of project.
-3) Type this command in terminal:
+a) In Linux:
+```bash
+source venv/bin/activate
+```
+b) In Window:
+```bash
+.\venv\bin\activate
+```
+4) Type this command in terminal:
 
 ```bash
 ipython --pylab
@@ -40,7 +48,7 @@ ipython --pylab
 4) After you in interactive mode of ipython, run this code:
 ```python
 import spectral.io.envi as envi
-img = envi.open("hyper_20220913_3cm.hdr", "hyper_20220913_3cm.img")
+img = envi.open("./data/spectral_image/hyper_20220913_3cm.hdr", "./data/spectral_image/hyper_20220913_3cm.img")
 from spectral import open_image, imshow
 view = imshow(img)
 ```
