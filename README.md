@@ -25,9 +25,9 @@ For windown:
 ```
 
 Then download spectral images in these links and save to folder ./data/spectral_image
-Train data: [train file.](https://docs.google.com/spreadsheets/d/10Wp1fz59lR28xio-lvEcxIZ8OE09b267/edit?usp=sharing&ouid=101687776546423364812&rtpof=true&sd=true)
-Header image file: [header file.](https://drive.google.com/file/d/1-FeYM1thYKsi6yO2wcq_kHSVfwjpz9ki/view?usp=sharing)
-Bands image file: [bands file.]()
+1) Train data: [train file.](https://docs.google.com/spreadsheets/d/10Wp1fz59lR28xio-lvEcxIZ8OE09b267/edit?usp=sharing&ouid=101687776546423364812&rtpof=true&sd=true)
+2) Header image file: [header file.](https://drive.google.com/file/d/1-FeYM1thYKsi6yO2wcq_kHSVfwjpz9ki/view?usp=sharing)
+3) Bands image file: [bands file.]()
 
 ## How to train AI model
 
