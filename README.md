@@ -2,16 +2,12 @@
 
 Agriculture prediction is a project that use AI to predict Nito, Photpho, Kali from spectral image.
 
-<https://www.spectralpython.net/>
-
-[![GitHub Actions Build](https://github.com/apache/spark/actions/workflows/build_main.yml/badge.svg)](https://github.com/apache/spark/actions/workflows/build_main.yml)
-[![PySpark Coverage](https://codecov.io/gh/apache/spark/branch/master/graph/badge.svg)](https://codecov.io/gh/apache/spark)
-[![PyPI Downloads](https://static.pepy.tech/personalized-badge/pyspark?period=month&units=international_system&left_color=black&right_color=orange&left_text=PyPI%20downloads)](https://pypi.org/project/pyspark/)
+What is data structured of spectral image? <https://www.spectralpython.net/>
 
 
 ## Install package dependencies
 
-To install the package dependencies, in linux run:
+To install the package dependencies and create folder that source code used, in linux run:
 
 ```bash
 sudo chmod +x ./src/bin/*.sh
@@ -30,28 +26,30 @@ Then download spectral images in these links and save to folder ./data/spectral_
 3) Bands image file: [bands file.]()
 
 ## How to read spectral image
-1) Open terminal in Linux or power-shell in Windown.
-2) Make sure that you in environment of project.
-a) In Linux:
-```bash
-source venv/bin/activate
-```
-b) In Window:
-```bash
-.\venv\bin\activate
-```
+1) Open terminal in Linux or power-shell in Window.
+2) Make sure that you are in environment of project.
+
+	In Linux:
+	```bash
+	source venv/bin/activate
+	```
+	
+	In Window:
+	```bash
+	.\venv\bin\activate
+	```
 4) Type this command in terminal:
 
-```bash
-ipython --pylab
-```
+	```bash
+	ipython --pylab
+	```
 4) After you in interactive mode of ipython, run this code:
-```python
-import spectral.io.envi as envi
-img = envi.open("./data/spectral_image/hyper_20220913_3cm.hdr", "./data/spectral_image/hyper_20220913_3cm.img")
-from spectral import open_image, imshow
-view = imshow(img)
-```
+	```python
+	import spectral.io.envi as envi
+	img = envi.open("./data/spectral_image/hyper_20220913_3cm.hdr", "./data/spectral_image/hyper_20220913_3cm.img")
+	from spectral import open_image, imshow
+	view = imshow(img)
+	```
 
 ## How to train AI model
 
