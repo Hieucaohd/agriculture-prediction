@@ -75,7 +75,7 @@ Then download spectral images in these links and save to folder ./data/spectral_
 
 	In Window:
 	```bash
-	.\venv\bin\activate
+	.\venv\Scripts\activate
 	```
 4) Type this command in terminal:
 
