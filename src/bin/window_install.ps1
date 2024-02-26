@@ -13,6 +13,7 @@ New-Item -ItemType Directory -Path .\src\proj\db\db_new -Force
 New-Item -ItemType Directory -Path .\src\data\img_col_data -Force
 New-Item -ItemType Directory -Path .\src\data\saved_result -Force
 New-Item -ItemType Directory -Path .\src\data\img_result_saved -Force
+New-Item -ItemType Directory -Path .\model_saved\NN_save\using_mutual_information -Force
 
 # Activate virtual environment
 .\venv\Scripts\Activate
