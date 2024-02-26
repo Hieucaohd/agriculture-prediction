@@ -109,4 +109,6 @@ Here is module that we build to train our AI: [train AI model.](https://github.c
 
 3) Draw image: [draw image.](https://github.com/Hieucaohd/agriculture-prediction/blob/main/src/draw_img.ipynb)
 
+This is an output of Kali value in a rice field that our AI model predicts from spectral image: [Kali](https://drive.google.com/file/d/1JZhQGkN3quckHi6w2KTPkBo981xNZdnu/view?usp=sharing)
+
 
