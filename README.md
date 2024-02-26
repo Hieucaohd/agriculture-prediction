@@ -29,6 +29,22 @@ Then download spectral images in these links and save to folder ./data/spectral_
 2) Header image file: [header file.](https://drive.google.com/file/d/1-FeYM1thYKsi6yO2wcq_kHSVfwjpz9ki/view?usp=sharing)
 3) Bands image file: [bands file.]()
 
+## How to read spectral image
+1) Open terminal in Linux or power-shell in Windown.
+2) Make sure that you in environment of project.
+3) Type this command in terminal:
+
+```bash
+ipython --pylab
+```
+4) After you in interactive mode of ipython, run this code:
+```python
+import spectral.io.envi as envi
+img = envi.open("hyper_20220913_3cm.hdr", "hyper_20220913_3cm.img")
+from spectral import open_image, imshow
+view = imshow(img)
+```
+
 ## How to train AI model
 
 We use PyTorch and Scikit-learn library to train the model inference: 
