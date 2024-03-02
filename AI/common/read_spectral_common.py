@@ -17,8 +17,14 @@ from typing import Literal
 import torch.nn as nn
 import torch
 from sklearn.feature_selection import mutual_info_regression
+import dill
 import warnings
 warnings.filterwarnings("ignore")
+
+
+def load_sklearn_model_to_file_by_cloudpickle(file_path):
+    with open(file_path, 'rb') as f:
+        return dill.load(f)
 
 
 def get_full_path(path):
@@ -241,8 +247,9 @@ def create_X_train_Y_train(df: pd.DataFrame, bands_ix: list[int]):
 
 
 class NeutralNetwork(nn.Module):
-    def __init__(self, number_bands: int, *args, **kwargs) -> None:
+    def __init__(self, number_bands: int, bands_ix, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
+        self.bands_ix = bands_ix
         self.linear_relu_stack = nn.Sequential(
             nn.Linear(number_bands, 100),
             nn.ReLU(),
@@ -310,24 +317,23 @@ def get_bands_ix_from_mutual_info(df: pd.DataFrame, min_mutual_info: float, type
     return sorted(bands_ix)
 
 
-def predict_using_neutral_network(X_train, Y_train, X_target, Y_target, name_file_output, super_param={"lr": 0.0001, "weight_decay": 1e-5, "n_epochs": 40000, "stop_value": 0.5}, re_run="N"):
+def predict_using_neutral_network(X_train, Y_train, X_target, Y_target, bands_ix, name_file_output, super_param={"lr": 0.0001, "weight_decay": 1e-5, "n_epochs": 40000, "stop_value": 0.5}, re_run="N"):
     loss_fn = nn.MSELoss()
     if not os.path.exists(name_file_output) or re_run == "Y":
         number_bands = X_train.shape[1]
-        model = NeutralNetwork(number_bands)
+        model = NeutralNetwork(number_bands, bands_ix)
         optimizer = torch.optim.Adam(model.parameters(), lr=super_param["lr"], weight_decay=super_param["weight_decay"])
         n_epochs = 40000
         train_model(model, loss_fn, optimizer, X_train, Y_train, [], [], n_epochs, 0.5)
-        torch.jit.script(model).save(name_file_output)
     else:
-        model = torch.jit.load(name_file_output)
+        model = load_sklearn_model_to_file_by_cloudpickle(name_file_output)
     
     model.eval()
     with torch.inference_mode():
         loss_fn = nn.MSELoss()
         Y_target_pred = model(X_target)
         loss = loss_fn(Y_target, Y_target_pred)
-        return np.sqrt(loss), Y_target_pred
+        return np.sqrt(loss), Y_target_pred, model
 
 
 def predict_using_random_forest(X_train, Y_train, X_target, Y_target, bands_ix, super_param={}):
